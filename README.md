@@ -1,5 +1,7 @@
 # snackbar
 
+![snackbar](screenshots/sample.gif)    
+
 ## Usage
 
 ### 1. Add Snackbar to your project
