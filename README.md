@@ -1,6 +1,7 @@
 # snackbar
+![snackbar](screenshots/sample.gif) 
 
-![snackbar](screenshots/sample.gif)    
+Supported on API Level 8 and above
 
 ## Usage
 
