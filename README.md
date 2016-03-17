@@ -1,5 +1,5 @@
 # snackbar
-<img src="https://github.com/oginotihiro/snackbar/tree/master/screenshots/sample.gif" width="260" />
+<img src="https://raw.githubusercontent.com/oginotihiro/snackbar/master/screenshots/sample.gif" width="260" />
 
 Supported on API Level 10 and above (2.3+)
 
