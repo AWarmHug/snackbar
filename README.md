@@ -1,8 +1,6 @@
 # snackbar
 <img src="https://raw.githubusercontent.com/oginotihiro/snackbar/master/screenshots/sample.gif" width="240" />
 
-Supported on API Level 10 and above (2.3+)
-
 ## Usage
 
 ### 1. Add Snackbar to your project
@@ -16,6 +14,10 @@ compile 'com.oginotihiro:snackbar:1.0.0'
 ```java
 Snackbar.make(SnackbarCustomLayout, ViewToFindParent, Snackbar.BOTTOM_TOP, Snackbar.LENGTH_SHORT).show();
 ```
+
+## Compatibility
+
+Supported on API level 10 and above (2.3+)
 
 ## License
 
