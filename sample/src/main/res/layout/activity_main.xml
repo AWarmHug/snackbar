@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.anydo.snackbar.sample.MainActivity"
-    android:id="@+id/view">
-        <Button android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="left"
-            android:id="@+id/leftBtn" />
-        <Button android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="top"
-            android:id="@+id/topBtn" />
-        <Button android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="right"
-            android:id="@+id/rightBtn" />
-        <Button android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="bottom"
-            android:id="@+id/bottomBtn" />
-        <Button android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="animDurationBtn"
-            android:id="@+id/animDurationBtn" />
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/defaultBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="default" />
+
+    <Button
+        android:id="@+id/leftBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="left" />
+
+    <Button
+        android:id="@+id/topBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="top" />
+
+    <Button
+        android:id="@+id/rightBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="right" />
+
+    <Button
+        android:id="@+id/bottomBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="bottom" />
+
+    <Button
+        android:id="@+id/animDurationBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="animDurationBtn" />
 </LinearLayout>

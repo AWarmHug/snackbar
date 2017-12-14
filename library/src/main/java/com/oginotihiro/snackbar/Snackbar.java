@@ -22,16 +22,20 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.lang.annotation.Retention;
@@ -44,20 +48,31 @@ public final class Snackbar {
      * @see Snackbar#setCallback(Callback)
      */
     public static abstract class Callback {
-        /** Indicates that the Snackbar was dismissed via an action click.*/
+        /**
+         * Indicates that the Snackbar was dismissed via an action click.
+         */
         public static final int DISMISS_EVENT_ACTION = 0;
-        /** Indicates that the Snackbar was dismissed via a timeout.*/
+        /**
+         * Indicates that the Snackbar was dismissed via a timeout.
+         */
         public static final int DISMISS_EVENT_TIMEOUT = 1;
-        /** Indicates that the Snackbar was dismissed via a call to {@link #dismiss()}.*/
+        /**
+         * Indicates that the Snackbar was dismissed via a call to {@link #dismiss()}.
+         */
         public static final int DISMISS_EVENT_MANUAL = 2;
-        /** Indicates that the Snackbar was dismissed from a new Snackbar being shown.*/
+        /**
+         * Indicates that the Snackbar was dismissed from a new Snackbar being shown.
+         */
         public static final int DISMISS_EVENT_CONSECUTIVE = 3;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         @IntDef({DISMISS_EVENT_ACTION, DISMISS_EVENT_TIMEOUT,
                 DISMISS_EVENT_MANUAL, DISMISS_EVENT_CONSECUTIVE})
         @Retention(RetentionPolicy.SOURCE)
-        public @interface DismissEvent {}
+        public @interface DismissEvent {
+        }
 
         /**
          * Called when the given {@link Snackbar} is visible.
@@ -74,10 +89,9 @@ public final class Snackbar {
          * having been manually dismissed, or an action being clicked.
          *
          * @param snackbar The snackbar which has been dismissed.
-         * @param event The event which caused the dismissal. One of either:
-         *              {@link #DISMISS_EVENT_ACTION}, {@link #DISMISS_EVENT_TIMEOUT},
-         *              {@link #DISMISS_EVENT_MANUAL} or {@link #DISMISS_EVENT_CONSECUTIVE}.
-         *
+         * @param event    The event which caused the dismissal. One of either:
+         *                 {@link #DISMISS_EVENT_ACTION}, {@link #DISMISS_EVENT_TIMEOUT},
+         *                 {@link #DISMISS_EVENT_MANUAL} or {@link #DISMISS_EVENT_CONSECUTIVE}.
          * @see Snackbar#dismiss()
          */
         public void onDismissed(Snackbar snackbar, @DismissEvent int event) {
@@ -85,20 +99,26 @@ public final class Snackbar {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @IntDef({LEFT_RIGHT, TOP_BOTTOM, RIGHT_LEFT, BOTTOM_TOP})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Direction {}
+    public @interface Direction {
+    }
 
     public static final int LEFT_RIGHT = 0;
     public static final int TOP_BOTTOM = 1;
     public static final int RIGHT_LEFT = 2;
     public static final int BOTTOM_TOP = 3;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @IntDef({LENGTH_INDEFINITE, LENGTH_SHORT, LENGTH_LONG})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Duration {}
+    public @interface Duration {
+    }
 
     /**
      * Show the Snackbar indefinitely. This means that the Snackbar will be displayed from the time
@@ -120,8 +140,8 @@ public final class Snackbar {
      */
     public static final int LENGTH_LONG = 0;
 
-    private static final int ANIMATION_DURATION = 750;
-    private static final int ANIMATION_FADE_DURATION = 540;
+    private static final int ANIMATION_DURATION = 350;
+    private static final int ANIMATION_FADE_DURATION = 240;
 
     private static final Handler sHandler;
     private static final int MSG_SHOW = 0;
@@ -171,17 +191,74 @@ public final class Snackbar {
         mView = layout;
     }
 
+    public static Snackbar make(@NonNull View view, @StringRes int strId, @Duration int duration) {
+        return make(view, view.getResources().getString(strId), duration);
+    }
+
+    public static Snackbar make(@NonNull View view, String text, @Duration int duration) {
+
+        return make(view, text, Snackbar.BOTTOM_TOP, duration);
+    }
+
+    public static Snackbar make(@NonNull View view, @StringRes int strId, @Direction int direction, @Duration int duration) {
+        return make(view, view.getResources().getString(strId), direction, duration);
+    }
+
+    public static Snackbar make(@NonNull View view, @NonNull String text, @Direction int direction, @Duration int duration) {
+        int gravity = direction == Snackbar.TOP_BOTTOM ? Gravity.TOP : Gravity.BOTTOM;
+        DefaultSnackLayout defaultLayout = new DefaultSnackLayout(view.getContext(), gravity);
+        Snackbar snackbar = make(view, defaultLayout, direction, duration, ANIMATION_DURATION, ANIMATION_FADE_DURATION);
+        snackbar.setText(text);
+        return snackbar;
+    }
+
+
+    public Snackbar setText(String text) {
+        DefaultSnackLayout defaultSnackLayout = (DefaultSnackLayout) mView;
+        defaultSnackLayout.getTvText().setText(text);
+        return this;
+    }
+
+    public Snackbar setAction(@StringRes int strId, View.OnClickListener clickListener) {
+        return setAction(mContext.getString(strId), clickListener);
+    }
+
+    public Snackbar setAction(@NonNull String action, final View.OnClickListener clickListener) {
+        DefaultSnackLayout defaultSnackLayout = (DefaultSnackLayout) mView;
+        Button btAction = defaultSnackLayout.getBtAction();
+        if (!TextUtils.isEmpty(action)) {
+            btAction.setVisibility(View.VISIBLE);
+            btAction.setText(action);
+        } else {
+            btAction.setVisibility(View.GONE);
+            btAction.setOnClickListener(null);
+        }
+        if (clickListener != null && btAction.getVisibility() == View.VISIBLE) {
+            btAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickListener.onClick(v);
+                    dispatchDismiss(Callback.DISMISS_EVENT_ACTION);
+                }
+            });
+        } else {
+            btAction.setOnClickListener(null);
+        }
+        return this;
+    }
+
+
     /**
      * Make a Snackbar to display
-     *
+     * <p>
      * <p>Snackbar will try and find a parent view to hold Snackbar's view from the value given
      * to {@code view}. Snackbar will walk up the view tree trying to find a suitable parent.
      *
-     * @param view              The view to find a parent from.
-     * @param layout            The content view.
-     * @param direction         The animation direction.
-     * @param duration          How long to display the snackbar.  Either {@link #LENGTH_SHORT} or {@link
-     *                          #LENGTH_LONG}
+     * @param view      The view to find a parent from.
+     * @param layout    The content view.
+     * @param direction The animation direction.
+     * @param duration  How long to display the snackbar.  Either {@link #LENGTH_SHORT} or {@link
+     *                  #LENGTH_LONG}
      */
     public static Snackbar make(@NonNull View view, @NonNull SnackbarLayoutBase layout, @Direction int direction, @Duration int duration) {
         return make(view, layout, direction, duration, ANIMATION_DURATION, ANIMATION_FADE_DURATION);
@@ -189,15 +266,15 @@ public final class Snackbar {
 
     /**
      * Make a Snackbar to display
-     *
+     * <p>
      * <p>Snackbar will try and find a parent view to hold Snackbar's view from the value given
      * to {@code view}. Snackbar will walk up the view tree trying to find a suitable parent.
      *
-     * @param view               The view to find a parent from.
-     * @param layout             The content view.
-     * @param direction          The animation direction.
-     * @param duration           How long to display the message.  Either {@link #LENGTH_SHORT} or {@link
-     *                           #LENGTH_LONG}
+     * @param view              The view to find a parent from.
+     * @param layout            The content view.
+     * @param direction         The animation direction.
+     * @param duration          How long to display the message.  Either {@link #LENGTH_SHORT} or {@link
+     *                          #LENGTH_LONG}
      * @param animationDuration
      */
     public static Snackbar make(@NonNull View view, @NonNull SnackbarLayoutBase layout, @Direction int direction, @Duration int duration, int animationDuration) {
@@ -206,15 +283,15 @@ public final class Snackbar {
 
     /**
      * Make a Snackbar to display
-     *
+     * <p>
      * <p>Snackbar will try and find a parent view to hold Snackbar's view from the value given
      * to {@code view}. Snackbar will walk up the view tree trying to find a suitable parent.
      *
-     * @param view               The view to find a parent from.
-     * @param layout             The content view.
-     * @param direction          The animation direction.
-     * @param duration           How long to display the message.  Either {@link #LENGTH_SHORT} or {@link
-     *                           #LENGTH_LONG}
+     * @param view                  The view to find a parent from.
+     * @param layout                The content view.
+     * @param direction             The animation direction.
+     * @param duration              How long to display the message.  Either {@link #LENGTH_SHORT} or {@link
+     *                              #LENGTH_LONG}
      * @param animationDuration
      * @param animationFadeDuration
      */
@@ -365,7 +442,8 @@ public final class Snackbar {
 
         mView.setOnAttachStateChangeListener(new SnackbarLayoutBase.OnAttachStateChangeListener() {
             @Override
-            public void onViewAttachedToWindow(View v) {}
+            public void onViewAttachedToWindow(View v) {
+            }
 
             @Override
             public void onViewDetachedFromWindow(View v) {
@@ -451,7 +529,8 @@ public final class Snackbar {
             anim.setDuration(mAnimDuration);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+                }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
@@ -462,7 +541,8 @@ public final class Snackbar {
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
             });
             mView.setAnimation(anim);
         }
@@ -522,7 +602,8 @@ public final class Snackbar {
             anim.setDuration(ANIMATION_DURATION);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+                }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
@@ -530,7 +611,8 @@ public final class Snackbar {
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+                }
             });
             mView.startAnimation(anim);
         }
@@ -557,6 +639,7 @@ public final class Snackbar {
 
         interface OnAttachStateChangeListener {
             void onViewAttachedToWindow(View v);
+
             void onViewDetachedFromWindow(View v);
         }
 

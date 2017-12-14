@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oginotihiro.snackbar.Snackbar;
 
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mView = findViewById(R.id.view);
-
+        findViewById(R.id.defaultBtn).setOnClickListener(this);
         findViewById(R.id.leftBtn).setOnClickListener(this);
         findViewById(R.id.topBtn).setOnClickListener(this);
         findViewById(R.id.rightBtn).setOnClickListener(this);
@@ -33,7 +34,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.leftBtn) {
+        if (id == R.id.defaultBtn) {
+            Snackbar.make(mView, "Message", Snackbar.LENGTH_INDEFINITE).setAction("Action", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, "我知道了", Toast.LENGTH_SHORT).show();
+                }
+            }).show();
+
+        } else if (id == R.id.leftBtn) {
             SnackbarLayout layout = new SnackbarLayout(this, Gravity.LEFT | Gravity.CENTER);
             mSnackbar = Snackbar.make(mView, layout, Snackbar.LEFT_RIGHT, Snackbar.LENGTH_SHORT);
             mSnackbar.show();
