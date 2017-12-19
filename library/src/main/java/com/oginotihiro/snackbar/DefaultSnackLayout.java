@@ -3,7 +3,6 @@ package com.oginotihiro.snackbar;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,20 +16,19 @@ public class DefaultSnackLayout extends Snackbar.SnackbarLayoutBase {
     private TextView tvText;
     private Button btAction;
 
-    public DefaultSnackLayout(Context context,int gravity) {
-        this(context, null,gravity);
+    public DefaultSnackLayout(Context context, int gravity) {
+        this(context, null, gravity);
     }
 
-    public DefaultSnackLayout(Context context, AttributeSet attrs,int gravity) {
+    public DefaultSnackLayout(Context context, AttributeSet attrs, int gravity) {
         super(context, attrs);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lp.gravity= gravity;
+        lp.gravity = gravity;
         setLayoutParams(lp);
-        LayoutInflater.from(context).inflate(R.layout.snackbar_default, this);
+        inflate(context, R.layout.snackbar_default, this);
         tvText = (TextView) findViewById(R.id.snackbar_text);
         btAction = (Button) findViewById(R.id.snackbar_action);
     }
-
 
 
     public TextView getTvText() {
