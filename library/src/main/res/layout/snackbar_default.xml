@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#151515">
@@ -11,13 +12,16 @@
         android:layout_gravity="center_vertical|left|start"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:paddingBottom="14dp"
+        android:paddingBottom="16dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingTop="14dp"
-        android:textColor="#ffffff"
+        android:paddingTop="16dp"
         android:textAlignment="viewStart"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="?attr/android:textColorSecondary"
+        android:textSize="16sp"
+        tools:text="这就是信息"
+        tools:textColor="#ffffff" />
 
     <Button
         android:id="@+id/snackbar_action"
@@ -25,8 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right|end"
+        android:layout_marginRight="8dp"
         android:minWidth="48dp"
         android:textColor="?attr/colorAccent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="我知道了"
+        tools:visibility="visible" />
 
 </LinearLayout>
