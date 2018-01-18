@@ -18,10 +18,9 @@
         android:paddingTop="16dp"
         android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="?attr/android:textColorSecondary"
+        android:textColor="#ffffff"
         android:textSize="16sp"
-        tools:text="这就是信息"
-        tools:textColor="#ffffff" />
+        tools:text="这就是信息" />
 
     <Button
         android:id="@+id/snackbar_action"
