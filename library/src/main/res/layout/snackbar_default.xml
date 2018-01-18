@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/snackbar_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|left|start"
         android:layout_weight="1"
@@ -19,8 +19,7 @@
         android:textAlignment="viewStart"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="#ffffff"
-        android:textSize="16sp"
-        tools:text="这就是信息" />
+        android:textSize="16sp"/>
 
     <Button
         android:id="@+id/snackbar_action"
@@ -31,8 +30,6 @@
         android:layout_marginRight="8dp"
         android:minWidth="48dp"
         android:textColor="?attr/colorAccent"
-        android:visibility="gone"
-        tools:text="我知道了"
-        tools:visibility="visible" />
+        android:visibility="gone"/>
 
 </LinearLayout>
